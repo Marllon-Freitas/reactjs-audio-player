@@ -8,7 +8,7 @@ import {
 } from "react-icons/bs";
 
 // Estilos
-import { Wrapper, Content } from "./AudioPlayer,style";
+import { Wrapper, Content } from "./AudioPlayer.style";
 
 function AudioPlayer() {
   //Estado
