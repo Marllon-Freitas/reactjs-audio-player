@@ -24,70 +24,72 @@ function AudioPlayer() {
   const progressVolumeRef = useRef(); //Referencia ao slider
   const animationRef = useRef(); //Referencia a animação
 
-  const timeTravel = (newTime) => {
+  function timeTravel(newTime) {
     progressBarRef.current.value = newTime;
     changeRange();
-  };
+  }
 
   useEffect(() => {
     audioPlayerRef.current.playbackRate = playbackRate;
-    if (audioCurrentTime == audioDuration) {
+    if (parseFloat(audioCurrentTime) === parseFloat(audioDuration)) {
       togglePlayPause();
       timeTravel(0);
     }
   }, [audioCurrentTime, playbackRate]);
 
-  const onLoadedMetadata = () => {
+  function onLoadedMetadata() {
     const seconds = Math.floor(audioPlayerRef.current.duration);
     setAudioDuration(seconds);
     progressBarRef.current.max = seconds;
-  };
-  const calculateTime = (secs) => {
+  }
+
+  function calculateTime(secs) {
     const minutes = Math.floor(secs / 60);
     const returnedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
     const seconds = Math.floor(secs % 60);
     const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
     return `${returnedMinutes}:${returnedSeconds}`;
-  };
+  }
 
-  const changePlayerCurrentTime = () => {
+  function changePlayerCurrentTime() {
     progressBarRef.current.style.setProperty(
       "--seek-before-width",
       `${(progressBarRef.current.value / audioDuration) * 100}%`
     );
     setAudioCurrentTime(progressBarRef.current.value);
-  };
+  }
 
-  const whilePlaying = () => {
+  function whilePlaying() {
     progressBarRef.current.value = audioPlayerRef.current.currentTime;
     changePlayerCurrentTime();
     animationRef.current = requestAnimationFrame(whilePlaying);
-  };
+  }
 
-  const changeRange = () => {
+  function changeRange() {
     audioPlayerRef.current.currentTime = progressBarRef.current.value;
     changePlayerCurrentTime();
-  };
+  }
 
   let audio = document.getElementById("my-audio");
 
-  const changeRangeVolume = () => {
+  function changeRangeVolume() {
     progressVolumeRef.current.volume = progressVolumeRef.current.value;
     audio.volume = progressVolumeRef.current.volume;
+    console.log(audio.volume);
     setAudioIsMuted(false);
     audio.muted = false;
-    if(progressVolumeRef.current.value == 0) {
-      setAudioIsMuted(true)
+    if (parseFloat(progressVolumeRef.current.value) === 0) {
+      setAudioIsMuted(true);
     } else {
-      setAudioIsMuted(false)
+      setAudioIsMuted(false);
     }
-  };
+  }
   
-  const setPlayBack = (value) => {
+  function setPlayBack(value) {
     setPlaybackRate(value);
-  };
+  }
 
-  const togglePlayPause = () => {
+  function togglePlayPause() {
     const prevValue = isPlaying;
     setIsPlaying(!prevValue);
     if (!prevValue) {
@@ -97,22 +99,21 @@ function AudioPlayer() {
       audioPlayerRef.current.pause();
       cancelAnimationFrame(animationRef.current);
     }
-  };
+  }
 
-  const toggleMuteUnmute = () => {
+  function toggleMuteUnmute() {
     const prevValue = audioIsMuted;
     setAudioIsMuted(!prevValue);
-    if(!audioIsMuted) {
+    if (!audioIsMuted) {
       audio.muted = true;
-      progressVolumeRef.current.value = 0
-      progressVolumeRef.current.volume = progressVolumeRef.current.value
+      progressVolumeRef.current.value = 0;
       audio.volume = progressVolumeRef.current.value;
     } else {
-      audio.muted = false
-      progressVolumeRef.current.value = 0.5
+      audio.muted = false;
+      progressVolumeRef.current.value = 0.5;
       audio.volume = progressVolumeRef.current.value;
-    } 
-  };
+    }
+  }
 
   return (
     <Wrapper>
@@ -195,7 +196,7 @@ function AudioPlayer() {
             className="progressBar"
             onChange={changeRange}
             ref={progressBarRef}
-            step="0.05"
+            step="0.01"
             type="range"
             defaultValue="0"
           />
@@ -232,7 +233,7 @@ function AudioPlayer() {
             onChange={changeRangeVolume}
             ref={progressVolumeRef}
             style={{ width: "90%" }}
-            step="0.05"
+            step="0.01"
             type="range"
             defaultValue="0.5"
           />
