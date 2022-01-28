@@ -75,7 +75,6 @@ function AudioPlayer() {
   function changeRangeVolume() {
     progressVolumeRef.current.volume = progressVolumeRef.current.value;
     audio.volume = progressVolumeRef.current.volume;
-    console.log(audio.volume);
     setAudioIsMuted(false);
     audio.muted = false;
     if (parseFloat(progressVolumeRef.current.value) === 0) {
@@ -84,7 +83,7 @@ function AudioPlayer() {
       setAudioIsMuted(false);
     }
   }
-  
+
   function setPlayBack(value) {
     setPlaybackRate(value);
   }
@@ -115,6 +114,27 @@ function AudioPlayer() {
     }
   }
 
+  function handleKeyPress(e) {
+    if (e.charCode === 32) {
+      togglePlayPause();
+    } else if (e.charCode === 77 || e.charCode === 109) {
+      toggleMuteUnmute();
+    }
+  }
+
+  function teste(e) {
+    switch (e.keyCode) {
+      case 37:
+        timeTravel(Number(progressBarRef.current.value) - 5);
+        break;
+      case 39:
+        timeTravel(Number(progressBarRef.current.value) + 5);
+        break;
+        default:
+        break;
+    }
+  }
+
   return (
     <Wrapper>
       <Content>
@@ -125,119 +145,125 @@ function AudioPlayer() {
           src="https://the360report.com/wp-content/uploads/2021/09/Rick_Astley_-_Never_Gonna_Give_You_Up.mp3?_=3"
           preload="metadata"
         ></audio>
-        <div className="speed-audio-change">
-          <div className="speed-audio-icon">
-            <BsSpeedometer2 style={{ cursor: "pointer" }} />
+        <button
+          onKeyPress={(e) => handleKeyPress(e)}
+          onKeyDown={(e) => teste(e)}
+          className="input-control-by-keyboard"
+        >
+          <div className="speed-audio-change">
+            <div className="speed-audio-icon">
+              <BsSpeedometer2 style={{ cursor: "pointer" }} />
+            </div>
+            <div className="speed-audio-options">
+              <button
+                onClick={() => {
+                  setPlayBack(0.25);
+                }}
+              >
+                0.25x
+              </button>
+              <button
+                onClick={() => {
+                  setPlayBack(0.5);
+                }}
+              >
+                0.5x
+              </button>
+              <button
+                onClick={() => {
+                  setPlayBack(1);
+                }}
+              >
+                1x
+              </button>
+              <button
+                onClick={() => {
+                  setPlayBack(1.5);
+                }}
+              >
+                1.5x
+              </button>
+              <button
+                onClick={() => {
+                  setPlayBack(2);
+                }}
+              >
+                2x
+              </button>
+            </div>
           </div>
-          <div className="speed-audio-options">
-            <button
-              onClick={() => {
-                setPlayBack(0.25);
-              }}
-            >
-              0.25x
-            </button>
-            <button
-              onClick={() => {
-                setPlayBack(0.5);
-              }}
-            >
-              0.5x
-            </button>
-            <button
-              onClick={() => {
-                setPlayBack(1);
-              }}
-            >
-              1x
-            </button>
-            <button
-              onClick={() => {
-                setPlayBack(1.5);
-              }}
-            >
-              1.5x
-            </button>
-            <button
-              onClick={() => {
-                setPlayBack(2);
-              }}
-            >
-              2x
-            </button>
+          <button onClick={togglePlayPause} className="button-play">
+            {!isPlaying ? (
+              <BsFillPlayFill
+                style={{
+                  fontSize: "1.5rem",
+                  margin: "0.2rem 0.3rem 0 0.2rem",
+                  cursor: "pointer",
+                }}
+              ></BsFillPlayFill>
+            ) : (
+              <BsPauseFill
+                style={{
+                  fontSize: "1.5rem",
+                  margin: "0.2rem 0.3rem 0 0.2rem",
+                  cursor: "pointer",
+                }}
+              ></BsPauseFill>
+            )}
+          </button>
+
+          {/* current time */}
+          <div>{calculateTime(audioCurrentTime)}</div>
+
+          {/* progress bar */}
+          <div className="audio-bar">
+            <input
+              className="progressBar"
+              onChange={changeRange}
+              ref={progressBarRef}
+              step="0.5"
+              type="range"
+              defaultValue="0"
+            />
           </div>
-        </div>
-        <div onClick={togglePlayPause} className="button-play">
-          {!isPlaying ? (
-            <BsFillPlayFill
-              style={{
-                fontSize: "1.5rem",
-                margin: "0.2rem 0.3rem 0 0.2rem",
-                cursor: "pointer",
-              }}
-            ></BsFillPlayFill>
-          ) : (
-            <BsPauseFill
-              style={{
-                fontSize: "1.5rem",
-                margin: "0.2rem 0.3rem 0 0.2rem",
-                cursor: "pointer",
-              }}
-            ></BsPauseFill>
-          )}
-        </div>
 
-        {/* current time */}
-        <div>{calculateTime(audioCurrentTime)}</div>
+          {/* duration */}
+          <div>{calculateTime(audioDuration)}</div>
 
-        {/* progress bar */}
-        <div className="audio-bar">
-          <input
-            className="progressBar"
-            onChange={changeRange}
-            ref={progressBarRef}
-            step="0.01"
-            type="range"
-            defaultValue="0"
-          />
-        </div>
+          {/* audio bar */}
+          <button onClick={toggleMuteUnmute} className="button-volume">
+            {audioIsMuted ? (
+              <BsFillVolumeMuteFill
+                style={{
+                  fontSize: "1.5rem",
+                  margin: "0.2rem 0.3rem 0 0.2rem",
+                  cursor: "pointer",
+                }}
+              ></BsFillVolumeMuteFill>
+            ) : (
+              <BsVolumeUpFill
+                style={{
+                  fontSize: "1.5rem",
+                  margin: "0.2rem 0.3rem 0 0.2rem",
+                  cursor: "pointer",
+                }}
+              ></BsVolumeUpFill>
+            )}
+          </button>
 
-        {/* duration */}
-        <div>{calculateTime(audioDuration)}</div>
-
-        {/* audio bar */}
-        <div onClick={toggleMuteUnmute} className="button-volume">
-          {audioIsMuted ? (
-            <BsFillVolumeMuteFill
-              style={{
-                fontSize: "1.5rem",
-                margin: "0.2rem 0.3rem 0 0.2rem",
-                cursor: "pointer",
-              }}
-            ></BsFillVolumeMuteFill>
-          ) : (
-            <BsVolumeUpFill
-              style={{
-                fontSize: "1.5rem",
-                margin: "0.2rem 0.3rem 0 0.2rem",
-                cursor: "pointer",
-              }}
-            ></BsVolumeUpFill>
-          )}
-        </div>
-
-        <div className="volume-bar">
-          <input
-            className="volumeBar"
-            max="1"
-            onChange={changeRangeVolume}
-            ref={progressVolumeRef}
-            style={{ width: "90%" }}
-            step="0.01"
-            type="range"
-            defaultValue="0.5"
-          />
-        </div>
+          <div className="volume-bar">
+            <input
+              className="volumeBar"
+              max="1"
+              onChange={changeRangeVolume}
+              ref={progressVolumeRef}
+              style={{ width: "90%" }}
+              step="0.01"
+              type="range"
+              defaultValue="0.5"
+            />
+          </div>
+        </button>
       </Content>
     </Wrapper>
   );

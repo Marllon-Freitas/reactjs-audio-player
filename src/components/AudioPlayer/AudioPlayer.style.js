@@ -23,6 +23,13 @@ export const Content = styled.div`
   display: flex;
   width: 700px;
 
+  .input-control-by-keyboard {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
   .speed-audio-change {
     position: relative;
     display: inline-block;
