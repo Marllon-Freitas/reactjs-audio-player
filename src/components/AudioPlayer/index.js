@@ -74,12 +74,15 @@ function AudioPlayer() {
   const changeRangeVolume = () => {
     progressVolumeRef.current.volume = progressVolumeRef.current.value;
     audio.volume = progressVolumeRef.current.volume;
+    setAudioIsMuted(false);
+    audio.muted = false;
     if(progressVolumeRef.current.value == 0) {
       setAudioIsMuted(true)
     } else {
       setAudioIsMuted(false)
     }
   };
+  
   const setPlayBack = (value) => {
     setPlaybackRate(value);
   };
@@ -104,18 +107,10 @@ function AudioPlayer() {
       progressVolumeRef.current.value = 0
       progressVolumeRef.current.volume = progressVolumeRef.current.value
       audio.volume = progressVolumeRef.current.value;
-      progressVolumeRef.current.style.setProperty(
-        "--disable-volume",
-        `none`
-      );
     } else {
       audio.muted = false
       progressVolumeRef.current.value = 0.5
       audio.volume = progressVolumeRef.current.value;
-      progressVolumeRef.current.style.setProperty(
-        "--disable-volume",
-        `initial`
-      );
     } 
   };
 
