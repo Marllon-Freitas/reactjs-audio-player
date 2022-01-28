@@ -192,7 +192,7 @@ function AudioPlayer() {
               </button>
             </div>
           </div>
-          <button onClick={togglePlayPause} className="button-play">
+          <div onClick={togglePlayPause} className="button-play">
             {!isPlaying ? (
               <BsFillPlayFill
                 style={{
@@ -210,7 +210,7 @@ function AudioPlayer() {
                 }}
               ></BsPauseFill>
             )}
-          </button>
+          </div>
 
           {/* current time */}
           <div>{calculateTime(audioCurrentTime)}</div>
@@ -231,7 +231,7 @@ function AudioPlayer() {
           <div>{calculateTime(audioDuration)}</div>
 
           {/* audio bar */}
-          <button onClick={toggleMuteUnmute} className="button-volume">
+          <div onClick={toggleMuteUnmute} className="button-volume">
             {audioIsMuted ? (
               <BsFillVolumeMuteFill
                 style={{
@@ -249,7 +249,7 @@ function AudioPlayer() {
                 }}
               ></BsVolumeUpFill>
             )}
-          </button>
+          </div>
 
           <div className="volume-bar">
             <input
